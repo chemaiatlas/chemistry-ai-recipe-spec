@@ -1,0 +1,57 @@
+
+name: CARS Validation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate Schema, Recipes and Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: tools/requirements.txt
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r tools/requirements.txt
+
+      - name: Validate JSON Schema
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          path = Path("schema/cars-0.1.schema.json")
+          schema = json.loads(path.read_text(encoding="utf-8"))
+          Draft202012Validator.check_schema(schema)
+          print("JSON Schema is valid")
+          PY
+
+      - name: Validate example recipes
+        run: |
+          set -e
+          find examples -type f \( -name "*.yaml" -o -name "*.yml" \) \
+            -print -exec python tools/validate.py {} \;
+
+      - name: Run automated tests
+        run: |
+          python -m unittest discover -s tests -v
