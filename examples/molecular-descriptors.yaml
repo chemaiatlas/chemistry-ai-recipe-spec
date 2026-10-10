@@ -1,0 +1,55 @@
+cars_version: "0.1.0"
+id: "https://example.org/recipes/molecular-descriptors"
+version: "1.0.0"
+title:
+  en: "Molecular Descriptor Calculation"
+  zh: "分子描述符计算"
+summary:
+  en: "Calculate selected descriptors from a validated molecular structure."
+domain: "cheminformatics"
+task: "molecular_descriptor_calculation"
+authors:
+  - name: "Example Research Team"
+license: "CC-BY-4.0"
+inputs:
+  - id: "molecule"
+    type: "chemical_structure"
+    required: true
+    formats: ["smiles"]
+    constraints:
+      stereochemistry: "preserve_if_present"
+      mixture_policy: "reject"
+outputs:
+  - id: "descriptors"
+    type: "molecular_properties"
+    formats: ["application/json"]
+    properties:
+      - name: "molecular_weight"
+        unit: "g/mol"
+        result_kind: "deterministic_calculation"
+capabilities:
+  - id: "validate_structure"
+    kind: "structure_validation"
+  - id: "calculate_descriptors"
+    kind: "molecular_descriptor_calculation"
+    depends_on: ["validate_structure"]
+scientific:
+  method: "Structure validation followed by descriptor calculation"
+  applicability: "Single-component organic molecules supported by the chosen toolkit"
+  limitations:
+    - "Input representation and normalization affect computed values"
+  validation_status: "not_assessed"
+security:
+  data_classification: "public_or_non_sensitive"
+  network_access: "not_required"
+  untrusted_code_execution: false
+execution:
+  mode: "adapter"
+  adapters:
+    - type: "cwl"
+      definition: "workflow.cwl"
+provenance:
+  references: []
+examples:
+  - input: {molecule: "CCO"}
+    note: "Illustrative input only; numerical output omitted pending executable test"
