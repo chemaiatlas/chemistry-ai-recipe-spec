@@ -59,11 +59,24 @@ Each result should declare a `result_kind`, chosen from:
 - `experimental_measurement`
 - `generated_explanation`
 
-The proposed `scientific.validation_status` values are `not_assessed`, `benchmarked`, `independently_reviewed`, and `experimentally_supported`. Any status beyond `not_assessed` requires evidence. These labels are **not a single linear certification ladder**; the dimensions of benchmarking, peer review, and experimental support must remain distinguishable.
+`scientific.validation_status` MUST be one of the following values:
+
+| Value | Meaning and evidence |
+|---|---|
+| `not_assessed` | No scientific assessment is claimed. This does not imply that the method is invalid. |
+| `benchmarked` | Evaluated against identified reference data or benchmarks under declared conditions, with metrics, coverage and failure cases. Benchmarking may be performed by the authors and does not imply independent review. |
+| `independently_reviewed` | Scientifically reviewed by an identified party independent of the recipe authors and implementers. Record reviewer identity, relationship or conflicts, scope, date, findings and evidence; internal self-review is insufficient. This does not imply experimental support. |
+| `experimentally_supported` | Supported by identified experimental observations within a declared scope and conditions. Record sources, methods and limitations. This does not prove complete scientific correctness or validity outside that scope. |
+
+Every value other than `not_assessed` requires supporting evidence, referenced in `provenance.references`, with scope and limitations described in `scientific.method`, `scientific.applicability` and `scientific.limitations` or the referenced assessment. L0 validates only the declaration, not the existence, quality or sufficiency of that evidence.
+
+These labels are **not a single linear certification ladder**. Do not sort them as confidence levels or infer one from another. The scalar field declares one supported assertion; when several apply, describe the additional evidence in the referenced assessment without implying that it is subsumed by the chosen value. Schema conformance, successful execution and reproducibility do not establish scientific validity.
+
+The erroneous initial Schema values `under_review` and `reviewed` are not valid values. Neither identifies an evidence type or establishes independent scientific review. Validators MUST reject them without automatic conversion; see [migration guidance](docs/SCHEMA-NOTES.md).
 
 ## 6. Minimal YAML Example
 
-*Illustrative only; this example has not yet been validated against an implemented CARS JSON Schema.*
+*This illustrative manifest is covered by the L0 conformance tests. It has not been execution-tested or scientifically assessed.*
 
 ```yaml
 cars_version: "0.1.0"

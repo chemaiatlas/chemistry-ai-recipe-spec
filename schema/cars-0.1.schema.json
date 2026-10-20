@@ -257,9 +257,11 @@
         "validation_status": {
           "enum": [
             "not_assessed",
-            "under_review",
-            "reviewed"
-          ]
+            "benchmarked",
+            "independently_reviewed",
+            "experimentally_supported"
+          ],
+          "description": "Scientific evidence assertion, not an ordered certification level. Benchmarking need not be independent; independent review requires a reviewer independent of authors and implementers; experimental support is scoped, not proof of complete correctness. Values other than not_assessed require evidence (not verified at L0). Legacy under_review and reviewed are invalid and must not be automatically mapped."
         }
       },
       "additionalProperties": false
