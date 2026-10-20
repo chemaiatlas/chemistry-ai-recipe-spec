@@ -23,6 +23,14 @@ if __name__ == '__main__':
         print(f'Validation error: {exc}', file=sys.stderr)
         sys.exit(2)
     for error in errors:
+        if (list(error.path) == ['scientific', 'validation_status']
+                and error.validator == 'enum'
+                and isinstance(error.instance, str)
+                and error.instance in ('under_review', 'reviewed')):
+            print('Migration required: legacy scientific.validation_status has no lossless '
+                  'mapping. Assess the evidence and explicitly choose a value from '
+                  'SPECIFICATION.md section 5.3; no automatic conversion was performed.',
+                  file=sys.stderr)
         print(f'FAIL {"/".join(map(str,error.path)) or "<root>"}: {error.message}')
     if errors:
         sys.exit(1)

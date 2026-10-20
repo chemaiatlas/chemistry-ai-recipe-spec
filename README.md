@@ -28,6 +28,18 @@ python -m unittest discover -s tests -v
 
 The validator performs **L0 structural checks only**. A passing manifest is not executable, secure or scientifically validated by implication.
 
+## Scientific validation status erratum (2026-10-20)
+
+`scientific.validation_status` uses `not_assessed`, `benchmarked`,
+`independently_reviewed`, or `experimentally_supported`, as defined in
+[Specification §5.3](SPECIFICATION.md#53-result-semantics-and-trust).
+These are evidence assertions, not ordered levels. L0 success does not prove
+scientific validity. The initial Schema's `under_review` and `reviewed` values
+were inconsistent with the prose and are now rejected, with a CLI migration
+message and no automatic conversion. See [compatibility and audit notes](docs/SCHEMA-NOTES.md).
+The manifest version remains `cars_version: "0.1.0"`; this is a documented draft
+Schema correction with a validation compatibility impact, not a silent migration.
+
 ## Proposed architecture
 
 `Chemistry task → CARS manifest → optional CWL / Arazzo / Agent Skill / MCP / native adapter → tools → provenance and evidence`
